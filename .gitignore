@@ -37,3 +37,5 @@
 .vscode/
 # Build-артефакты
 build/
+# SFML
+SFML-3.0.0/
