@@ -1,3 +1,4 @@
+#include <iostream>
 #include <vector>
 
 #include "Reel.h"
@@ -24,8 +25,9 @@ bool IdleState::Update(float delta_time)
     {
         reel.SetRotationSpeed(0.0f);
         reel.Rotate(delta_time);
+        std::cout << "Wait rotate reel" << std::endl;
     }
-    return false;
+    return true;
 }
 
 StartRollState::StartRollState(std::vector<Reel> &reels, float acceleration)
@@ -44,6 +46,7 @@ bool StartRollState::Update(float delta_time)
         {
             reels_overclocked = false;
         }
+        std::cout << "Start rotate reel" << std::endl;
     }
     return reels_overclocked;
 }
@@ -59,6 +62,7 @@ bool RollState::Update(float delta_time)
     {
         reel.Rotate(delta_time);
     }
+    std::cout << "Start rotate reel" << std::endl;
     curent_timer_ -= delta_time;
     if (curent_timer_ <= 0)
     {
@@ -87,6 +91,7 @@ bool EndRollState::Update(float delta_time)
         else
         {
             reel.SetRotationSpeed(0.0f);
+            std::cout << "Stop rotate reel" << std::endl;
         }
     }
     return reels_stoped;

@@ -7,13 +7,6 @@ project(SlotMachine)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-# Set vcpkg toolchain file (adjust the path as needed)
-if (WIN32)
-    set(CMAKE_TOOLCHAIN_FILE "C:vcpkg/scripts/buildsystems/vcpkg.cmake" CACHE STRING "")
-elseif (UNIX)
-    set(CMAKE_TOOLCHAIN_FILE "$ENV{HOME}/vcpkg/scripts/buildsystems/vcpkg.cmake" CACHE STRING "")
-endif()
-
 # Find SFML
 find_package(SFML REQUIRED COMPONENTS graphics window system audio)
 

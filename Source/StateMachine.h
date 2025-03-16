@@ -1,3 +1,5 @@
+#pragma once
+
 #include <vector>
 #include <memory>
 
@@ -6,7 +8,7 @@
 class StateMachine
 {
 public:
-    StateMachine(std::vector<Reel> &reels);
+    StateMachine(std::vector<Reel>* reels);
     void Update(float delta_time);
     void NextState();
 

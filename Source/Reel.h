@@ -1,3 +1,6 @@
+#pragma once
+
+#include <memory>
 #include <SFML/Graphics.hpp>
 
 class Reel
@@ -12,7 +15,7 @@ public:
     int GetShapeType() const;
 
 private:
-    std::vector<std::unique_ptr<sf::Shape>> shapes_;
+    std::vector<int> shapes_;
     float speed_ = 0.0f;
     float rotation_ = 0.0f;
     const float max_speed_ = 1;

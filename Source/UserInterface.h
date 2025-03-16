@@ -1,3 +1,5 @@
+#pragma once
+
 #include <SFML/Graphics.hpp>
 
 class UserInterface
@@ -7,5 +9,5 @@ public:
     void Draw();
 
 private:
-    sf::RenderWindow window_;
+    //sf::RenderWindow window_;
 };
