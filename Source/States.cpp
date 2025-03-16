@@ -25,9 +25,9 @@ bool IdleState::Update(float delta_time)
     {
         reel.SetRotationSpeed(0.0f);
         reel.Rotate(delta_time);
-        std::cout << "Wait rotate reel" << std::endl;
+        std::cout << "Wait rotate reel, delta time " << delta_time << " curent speed " << reel.GetRotationSpeed() << std::endl;
     }
-    return true;
+    return false;
 }
 
 StartRollState::StartRollState(std::vector<Reel> &reels, float acceleration)
@@ -46,8 +46,8 @@ bool StartRollState::Update(float delta_time)
         {
             reels_overclocked = false;
         }
-        std::cout << "Start rotate reel" << std::endl;
     }
+    std::cout << "Start rotate reel, delta time " << delta_time << " curent speed " << GetReels()[0].GetRotationSpeed() << std::endl;
     return reels_overclocked;
 }
 
@@ -62,7 +62,7 @@ bool RollState::Update(float delta_time)
     {
         reel.Rotate(delta_time);
     }
-    std::cout << "Start rotate reel" << std::endl;
+    std::cout << "Rotate reel, delta time " << delta_time << " curent timer " << curent_timer_ << std::endl;
     curent_timer_ -= delta_time;
     if (curent_timer_ <= 0)
     {
@@ -91,8 +91,8 @@ bool EndRollState::Update(float delta_time)
         else
         {
             reel.SetRotationSpeed(0.0f);
-            std::cout << "Stop rotate reel" << std::endl;
         }
     }
+    std::cout << "Stop rotate reel, delta time " << delta_time << std::endl;
     return reels_stoped;
 }
