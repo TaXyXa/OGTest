@@ -13,4 +13,5 @@ public:
 private:
     std::vector<std::shared_ptr<State>> states_;
     std::vector<Reel> *reels_;
+    int curent_state_;
 };

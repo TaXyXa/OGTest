@@ -5,13 +5,14 @@
 class State
 {
 public:
-    State();
+    State(std::vector<Reel> &reels);
     // return true if Execute is complite (to change state)
     virtual bool Update(float delta_time) = 0;
     virtual ~State() = default;
+    std::vector<Reel> &GetReels() const;
 
-protected:
-    std::vector<Reel> *reels_ = nullptr;
+private:
+    std::vector<Reel> &reels_;
 };
 
 class IdleState : public State
@@ -24,20 +25,30 @@ public:
 class StartRollState : public State
 {
 public:
-    StartRollState(std::vector<Reel> &reels);
+    StartRollState(std::vector<Reel> &reels, float acceleration);
     bool Update(float delta_time) override;
+
+private:
+    const float acceleration_;
 };
 
 class RollState : public State
 {
 public:
-    RollState(std::vector<Reel> &reels);
+    RollState(std::vector<Reel> &reels, float timer);
     bool Update(float delta_time) override;
+
+private:
+    float curent_timer_;
+    const float timer_duration_;
 };
 
 class EndRollState : public State
 {
 public:
-    EndRollState(std::vector<Reel> &reels);
+    EndRollState(std::vector<Reel> &reels, float acceleration);
     bool Update(float delta_time) override;
+
+private:
+    const float acceleration_;
 };

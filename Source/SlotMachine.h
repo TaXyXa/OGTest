@@ -14,5 +14,5 @@ public:
 private:
     std::vector<Reel> reels_;
     StateMachine state_machine_;
-    UserInterface interface_;
+    std::unique_ptr<UserInterface> interface_;
 };
