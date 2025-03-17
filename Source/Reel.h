@@ -6,7 +6,7 @@
 class Reel
 {
 public:
-    Reel();
+    Reel(std::initializer_list<int> shapes);
     void SetRotationSpeed(float new_speed);
     float GetRotationSpeed() const;
     float GetMaxRotationSpeed() const;

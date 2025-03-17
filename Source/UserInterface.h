@@ -10,8 +10,7 @@ public:
     bool IsWindowOpen() const;
     void HandleEvents();
     void Render();
-    bool IsStartButtonPressed() const;
-    bool IsStopButtonPressed() const;
+    bool IsButtonPressed() const;
     float GetDeltaTime() const;
     void Draw();
 
@@ -20,7 +19,6 @@ private:
     std::vector<Reel> *reels_;
     sf::Font font_;
     sf::Text start_button_;
-    sf::Text stop_button_;
     sf::Clock clock;
     float delta_time_;
 };

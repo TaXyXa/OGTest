@@ -11,6 +11,7 @@ StateMachine::StateMachine(std::vector<Reel> *reels)
     states_.push_back(std::make_shared<StartRollState>(*reels_, 1.0f));
     states_.push_back(std::make_shared<RollState>(*reels_, 3.0f));
     states_.push_back(std::make_shared<EndRollState>(*reels_, 1.0f));
+    states_.push_back(std::make_shared<ShowResultState>(*reels_, 2.0f));
 }
 
 void StateMachine::Update(float delta_time)
@@ -22,19 +23,32 @@ void StateMachine::Update(float delta_time)
     next_state_ = states_[curent_state_]->Update(delta_time);
 }
 
-void StateMachine::Start()
+void StateMachine::ButtonEvent()
 {
-    if (curent_state_ == 0)
+    switch (curent_state_)
     {
+    case 0:
         NextState();
-    }
-}
+        break;
+    case 1:
+        states_[1]->Fast();
+        states_[2]->Fast();
+        states_[3]->Fast();
+        break;
+    case 2:
+        states_[2]->Fast();
+        states_[3]->Fast();
+        break;
+    case 3:
+        states_[3]->Fast();
+        break;
+    case 4:
+        NextState();
+        NextState();
+        break;
 
-void StateMachine::Stop()
-{
-    if (curent_state_ == 2)
-    {
-        NextState();
+    default:
+        break;
     }
 }
 

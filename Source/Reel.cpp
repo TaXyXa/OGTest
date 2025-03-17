@@ -2,7 +2,8 @@
 
 #include "Reel.h"
 
-Reel::Reel()
+Reel::Reel(std::initializer_list<int> shapes)
+    : shapes_(shapes)
 {
 }
 
@@ -36,5 +37,5 @@ void Reel::Draw(sf::RenderWindow &window) const
 
 int Reel::GetShapeType() const
 {
-    return (int)rotation_;
+    return shapes_[(int)rotation_];
 }

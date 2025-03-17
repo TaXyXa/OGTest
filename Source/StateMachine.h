@@ -10,8 +10,7 @@ class StateMachine
 public:
     StateMachine(std::vector<Reel> *reels);
     void Update(float delta_time);
-    void Start();
-    void Stop();
+    void ButtonEvent();
     void NextState();
 
 private:

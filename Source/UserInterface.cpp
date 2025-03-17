@@ -14,16 +14,10 @@ UserInterface::UserInterface(std::vector<Reel> *reels)
     }
 
     start_button_.setFont(font_);
-    start_button_.setString("Start");
+    start_button_.setString("Play");
     start_button_.setFillColor(sf::Color::White);
     start_button_.setCharacterSize(30);
-    start_button_.setPosition(50, 500);
-
-    stop_button_.setFont(font_);
-    stop_button_.setString("Stop");
-    stop_button_.setFillColor(sf::Color::White);
-    stop_button_.setCharacterSize(30);
-    stop_button_.setPosition(500, 500);
+    start_button_.setPosition(400, 500);
 }
 
 bool UserInterface::IsWindowOpen() const
@@ -35,7 +29,6 @@ void UserInterface::Render()
 {
     window_.clear();
     window_.draw(start_button_);
-    window_.draw(stop_button_);
     window_.display();
     delta_time_ = clock.restart().asSeconds();
 }
@@ -52,18 +45,11 @@ void UserInterface::HandleEvents()
     }
 }
 
-bool UserInterface::IsStartButtonPressed() const
+bool UserInterface::IsButtonPressed() const
 {
     return sf::Mouse::isButtonPressed(sf::Mouse::Left) &&
            start_button_.getGlobalBounds().contains(sf::Mouse::getPosition(window_).x,
                                                     sf::Mouse::getPosition(window_).y);
-}
-
-bool UserInterface::IsStopButtonPressed() const
-{
-    return sf::Mouse::isButtonPressed(sf::Mouse::Left) &&
-           stop_button_.getGlobalBounds().contains(sf::Mouse::getPosition(window_).x,
-                                                   sf::Mouse::getPosition(window_).y);
 }
 
 float UserInterface::GetDeltaTime() const
