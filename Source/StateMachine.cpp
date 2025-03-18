@@ -31,16 +31,16 @@ void StateMachine::ButtonEvent()
         NextState();
         break;
     case 1:
-        states_[1]->Fast();
-        states_[2]->Fast();
-        states_[3]->Fast();
+        // states_[1]->Fast();
+        // states_[2]->Fast();
+        // states_[3]->Fast();
         break;
     case 2:
-        states_[2]->Fast();
-        states_[3]->Fast();
+        // states_[2]->Fast();
+        // states_[3]->Fast();
         break;
     case 3:
-        states_[3]->Fast();
+        // states_[3]->Fast();
         break;
     case 4:
         NextState();

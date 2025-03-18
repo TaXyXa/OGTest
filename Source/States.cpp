@@ -25,7 +25,7 @@ bool IdleState::Update(float delta_time)
     {
         reel.SetRotationSpeed(0.0f);
         reel.Rotate(delta_time);
-        std::cout << "Wait rotate reel, delta time " << delta_time << " curent speed " << reel.GetRotationSpeed() << std::endl;
+        // std::cout << "Wait rotate reel, delta time " << delta_time << " curent speed " << reel.GetRotationSpeed() << std::endl;
     }
     return false;
 }
@@ -53,7 +53,7 @@ bool StartRollState::Update(float delta_time)
             is_fast = false;
         }
     }
-    std::cout << "Start rotate reel, delta time " << delta_time << " curent speed " << GetReels()[0].GetRotationSpeed() << std::endl;
+    // std::cout << "Start rotate reel, delta time " << delta_time << " curent speed " << GetReels()[0].GetRotationSpeed() << std::endl;
     return reels_overclocked;
 }
 
@@ -76,7 +76,7 @@ bool RollState::Update(float delta_time)
     {
         reel.Rotate(delta_time);
     }
-    std::cout << "Rotate reel, delta time " << delta_time << " curent timer " << curent_timer_ << std::endl;
+    // std::cout << "Rotate reel, delta time " << delta_time << " curent timer " << curent_timer_ << std::endl;
     curent_timer_ -= delta_time;
     if (is_fast)
     {
@@ -117,7 +117,7 @@ bool EndRollState::Update(float delta_time)
         else
         {
             reel.SetRotationSpeed(0.0f);
-            std::cout << "Stop rotate reel, result " << reel.GetShapeType() << std::endl;
+            // std::cout << "Stop rotate reel, result " << 1 << std::endl;
             is_fast = false;
         }
     }
@@ -143,13 +143,13 @@ bool ShowResultState::Update(float delta_time)
     {
         curent_timer_ -= delta_time;
         end_show = false;
-        std::cout << "Show result" << std::endl
-                  << "== ";
+        /* std::cout << "Show result" << std::endl
+                   << "== ";
         for (Reel &reel : GetReels())
         {
-            std::cout << reel.GetShapeType() << " ";
+            std::cout << 1 << " ";
         }
-        std::cout << "==" << std::endl;
+        std::cout << "==" << std::endl;*/
     }
     else
     {

@@ -1,7 +1,6 @@
 #pragma once
 
-#include <memory>
-#include <SFML/Graphics.hpp>
+#include <vector>
 
 class Reel
 {
@@ -11,11 +10,11 @@ public:
     float GetRotationSpeed() const;
     float GetMaxRotationSpeed() const;
     void Rotate(float delta_time);
-    void Draw(sf::RenderWindow &window) const;
-    int GetShapeType() const;
+    int GetSpriteByNumber(int number) const;
+    float GetRotation() const;
 
 private:
-    std::vector<int> shapes_;
+    std::vector<int> sprites_;
     float speed_ = 0.0f;
     float rotation_ = 0.0f;
     const float max_speed_ = 1;

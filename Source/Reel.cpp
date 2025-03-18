@@ -1,9 +1,7 @@
-#include <SFML/Graphics.hpp>
-
 #include "Reel.h"
 
-Reel::Reel(std::initializer_list<int> shapes)
-    : shapes_(shapes)
+Reel::Reel(std::initializer_list<int> sprites)
+    : sprites_(sprites)
 {
 }
 
@@ -25,17 +23,26 @@ float Reel::GetMaxRotationSpeed() const
 void Reel::Rotate(float delta_time)
 {
     rotation_ += speed_ * delta_time;
-    if (rotation_ > shapes_.size())
+    if (rotation_ > sprites_.size())
     {
-        rotation_ -= shapes_.size();
+        rotation_ -= sprites_.size();
     }
 }
 
-void Reel::Draw(sf::RenderWindow &window) const
+int Reel::GetSpriteByNumber(int number) const
 {
+    if (number < 0)
+    {
+        return GetSpriteByNumber(number + sprites_.size());
+    }
+    if (number < sprites_.size())
+    {
+        return sprites_[number];
+    }
+    return sprites_[number % sprites_.size()];
 }
 
-int Reel::GetShapeType() const
+float Reel::GetRotation() const
 {
-    return shapes_[(int)rotation_];
+    return rotation_;
 }
