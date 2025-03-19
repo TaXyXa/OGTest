@@ -8,9 +8,9 @@ StateMachine::StateMachine(std::vector<Reel> *reels)
     : reels_(reels), curent_state_(0)
 {
     states_.push_back(std::make_shared<IdleState>(*reels_));
-    states_.push_back(std::make_shared<StartRollState>(*reels_, 1.0f));
+    states_.push_back(std::make_shared<StartRollState>(*reels_, 0.5f));
     states_.push_back(std::make_shared<RollState>(*reels_, 3.0f));
-    states_.push_back(std::make_shared<EndRollState>(*reels_, 1.0f));
+    states_.push_back(std::make_shared<EndRollState>(*reels_, 0.2f));
     states_.push_back(std::make_shared<ShowResultState>(*reels_, 2.0f));
 }
 

@@ -7,7 +7,7 @@
 #include "UserInterface.h"
 
 SlotMachine::SlotMachine()
-    : reels_({Reel({0, 1, 2, 3}), Reel({2, 3, 1, 0}), Reel({1, 0, 3, 2})}),
+    : reels_({Reel({0, 1, 2, 3, 2, 1, 0}), Reel({2, 3, 1, 0, 2, 3, 0}), Reel({1, 0, 3, 2, 3, 1, 2}), Reel({1, 0, 3, 2, 3, 1, 2})}),
       state_machine_(&reels_),
       interface_(std::make_unique<UserInterface>(&reels_))
 {
