@@ -1,10 +1,10 @@
 #include <iostream>
 
-#include "SlotMachine.h"
+#include "StateMachine.h"
 
 int main()
 {
     std::cout << "Hello World" << std::endl;
-    SlotMachine slot_machine;
+    StateMachine slot_machine;
     slot_machine.Start();
 }

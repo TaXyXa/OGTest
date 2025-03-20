@@ -3,15 +3,42 @@
 
 #include "States.h"
 #include "StateMachine.h"
+#include "UserInterface.h"
 
-StateMachine::StateMachine(std::vector<Reel> *reels)
-    : reels_(reels), curent_state_(0)
+StateMachine::StateMachine()
+    : reels_({Reel({0, 1, 2, 3, 2, 1, 0}),
+              Reel({2, 3, 1, 0, 2, 3, 0}),
+              Reel({1, 0, 3, 2, 3, 1, 2}),
+              Reel({1, 0, 3, 2, 3, 1, 2})}),
+      curent_state_(0),
+      interface_(std::make_unique<UserInterface>(&reels_))
 {
-    states_.push_back(std::make_shared<IdleState>(*reels_));
-    states_.push_back(std::make_shared<StartRollState>(*reels_, 0.5f));
-    states_.push_back(std::make_shared<RollState>(*reels_, 3.0f));
-    states_.push_back(std::make_shared<EndRollState>(*reels_, 0.2f));
-    states_.push_back(std::make_shared<ShowResultState>(*reels_, 2.0f));
+    states_.push_back(std::make_shared<IdleState>(reels_));
+    states_.push_back(std::make_shared<StartRollState>(reels_));
+    states_.push_back(std::make_shared<RollState>(reels_, 3.0f));
+    states_.push_back(std::make_shared<StopRollState>(reels_));
+    states_.push_back(std::make_shared<ShowResultState>(reels_, 2.0f));
+}
+
+void StateMachine::Start()
+{
+    bool continue_game = true;
+    bool button_pressed = false;
+    float delta_time = 0.0f;
+    while (continue_game)
+    {
+        if (!interface_->IsWindowOpen())
+        {
+            continue_game = false;
+        }
+        if (interface_->IsButtonPressed())
+        {
+            ButtonEvent();
+        }
+        Update(delta_time);
+        interface_->Update();
+        delta_time = interface_->GetDeltaTime();
+    }
 }
 
 void StateMachine::Update(float delta_time)
@@ -19,6 +46,12 @@ void StateMachine::Update(float delta_time)
     if (next_state_)
     {
         NextState();
+
+        if (curent_state_ == 4)
+        {
+            int result = dynamic_cast<ShowResultState *>(states_[curent_state_].get())->CalculateResult();
+            interface_->SetResult(result);
+        }
     }
     next_state_ = states_[curent_state_]->Update(delta_time);
 }
@@ -31,16 +64,16 @@ void StateMachine::ButtonEvent()
         NextState();
         break;
     case 1:
-        // states_[1]->Fast();
-        // states_[2]->Fast();
-        // states_[3]->Fast();
+        states_[1]->Fast();
+        states_[2]->Fast();
+        states_[3]->Fast();
         break;
     case 2:
-        // states_[2]->Fast();
-        // states_[3]->Fast();
+        states_[2]->Fast();
+        states_[3]->Fast();
         break;
     case 3:
-        // states_[3]->Fast();
+        states_[3]->Fast();
         break;
     case 4:
         NextState();

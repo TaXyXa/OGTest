@@ -25,14 +25,13 @@ bool IdleState::Update(float delta_time)
     {
         reel.SetRotationSpeed(0.0f);
         reel.Rotate(delta_time);
-        // std::cout << "Wait rotate reel, delta time " << delta_time << " curent speed " << reel.GetRotationSpeed() << std::endl;
     }
     return false;
 }
 
-StartRollState::StartRollState(std::vector<Reel> &reels, float acceleration)
+StartRollState::StartRollState(std::vector<Reel> &reels)
     : State(reels),
-      acceleration_(acceleration),
+      acceleration_(1.0f),
       is_fast(false)
 {
 }
@@ -44,16 +43,17 @@ bool StartRollState::Update(float delta_time)
     {
         reel.SetRotationSpeed(reel.GetRotationSpeed() + delta_time * acceleration_ * (is_fast ? 5 : 1));
         reel.Rotate(delta_time);
+
         if (reel.GetRotationSpeed() < reel.GetMaxRotationSpeed())
         {
             reels_overclocked = false;
         }
-        else
-        {
-            is_fast = false;
-        }
     }
-    // std::cout << "Start rotate reel, delta time " << delta_time << " curent speed " << GetReels()[0].GetRotationSpeed() << std::endl;
+
+    if (!reels_overclocked)
+    {
+        is_fast = false;
+    }
     return reels_overclocked;
 }
 
@@ -76,7 +76,6 @@ bool RollState::Update(float delta_time)
     {
         reel.Rotate(delta_time);
     }
-    // std::cout << "Rotate reel, delta time " << delta_time << " curent timer " << curent_timer_ << std::endl;
     curent_timer_ -= delta_time;
     if (is_fast)
     {
@@ -96,14 +95,14 @@ void RollState::Fast()
     is_fast = true;
 }
 
-EndRollState::EndRollState(std::vector<Reel> &reels, float acceleration)
+StopRollState::StopRollState(std::vector<Reel> &reels)
     : State(reels),
-      acceleration_(acceleration),
-      is_fast(false)
+      is_fast(false),
+      acceleration_(1.0f)
 {
 }
 
-bool EndRollState::Update(float delta_time)
+bool StopRollState::Update(float delta_time)
 {
     bool reels_stoped = true;
     for (Reel &reel : GetReels())
@@ -117,14 +116,13 @@ bool EndRollState::Update(float delta_time)
         else
         {
             reel.SetRotationSpeed(0.0f);
-            // std::cout << "Stop rotate reel, result " << 1 << std::endl;
             is_fast = false;
         }
     }
     return reels_stoped;
 }
 
-void EndRollState::Fast()
+void StopRollState::Fast()
 {
     is_fast = true;
 }
@@ -143,17 +141,15 @@ bool ShowResultState::Update(float delta_time)
     {
         curent_timer_ -= delta_time;
         end_show = false;
-        /* std::cout << "Show result" << std::endl
-                   << "== ";
-        for (Reel &reel : GetReels())
-        {
-            std::cout << 1 << " ";
-        }
-        std::cout << "==" << std::endl;*/
     }
     else
     {
         curent_timer_ = timer_duration_;
     }
     return end_show;
+}
+
+int ShowResultState::CalculateResult() const
+{
+    return 1;
 }

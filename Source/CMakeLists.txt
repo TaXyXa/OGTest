@@ -17,7 +17,6 @@ set(SOURCE
     States.cpp
     StateMachine.cpp
     UserInterface.cpp
-    SlotMachine.cpp
 )
 
 # Create the executable

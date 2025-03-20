@@ -9,15 +9,11 @@ UserInterface::UserInterface(std::vector<Reel> *reels)
       window_(sf::VideoMode(800, 600), "Slot Machine"),
       delta_time_(0.0f),
       sprite_size_(128),
-      reels_offset_(200.0f, 200.0f)
+      reels_offset_(200.0f, 200.0f),
+      button_(128, 64, 400, 500)
+
 {
     font_.loadFromFile("DarkGraffiti-Regular.ttf");
-
-    start_button_.setFont(font_);
-    start_button_.setString("Play");
-    start_button_.setFillColor(sf::Color::White);
-    start_button_.setCharacterSize(100);
-    start_button_.setPosition(400, 500);
 
     textures_.reserve(5);
     sprites_.reserve(5);
@@ -43,8 +39,17 @@ bool UserInterface::IsWindowOpen() const
     return window_.isOpen();
 }
 
-void UserInterface::Render()
+void UserInterface::Update()
 {
+    sf::Event event;
+    while (window_.pollEvent(event))
+    {
+        if (event.type == sf::Event::Closed)
+        {
+            window_.close();
+        }
+    }
+
     window_.clear();
     const int reel_count = reels_->size();
 
@@ -60,32 +65,81 @@ void UserInterface::Render()
             window_.draw(curent_sprite, sf::RenderStates().transform.translate({x_pos, y_pos}));
         }
     }
-    window_.draw(start_button_);
+    window_.draw(button_);
     window_.display();
     delta_time_ = clock.restart().asSeconds();
     std::cout << "FPS: " << (int)(1 / delta_time_) << std::endl;
 }
 
-void UserInterface::HandleEvents()
+bool UserInterface::IsButtonPressed()
 {
-    sf::Event event;
-    while (window_.pollEvent(event))
-    {
-        if (event.type == sf::Event::Closed)
-        {
-            window_.close();
-        }
-    }
-}
-
-bool UserInterface::IsButtonPressed() const
-{
-    return sf::Mouse::isButtonPressed(sf::Mouse::Left) &&
-           start_button_.getGlobalBounds().contains(sf::Mouse::getPosition(window_).x,
-                                                    sf::Mouse::getPosition(window_).y);
+    return button_.IsButtonPressed(window_);
 }
 
 float UserInterface::GetDeltaTime() const
 {
     return delta_time_;
+}
+
+void UserInterface::SetResult(int result)
+{
+    result_ = result;
+}
+
+Button::Button(int x_size, int y_size, int x_coordinates, int y_coordinates)
+    : was_pressed_(false)
+{
+    font_.loadFromFile("DarkGraffiti-Regular.ttf");
+    if (texture_.loadFromFile("Button.png", sf::IntRect({0, 0}, {x_size, y_size})))
+    {
+        texture_.setSmooth(true);
+        sprite_ = sf::Sprite(texture_);
+        std::cout << "Add button" << std::endl;
+    }
+    text_.setString("Start");
+    text_.setFont(font_);
+    text_.setPosition(x_coordinates, y_coordinates);
+    text_.setFillColor(sf::Color::White);
+    text_.setCharacterSize(100);
+    sprite_.setPosition(x_coordinates, y_coordinates);
+}
+
+bool Button::IsButtonPressed(const sf::Window &window)
+{
+    bool now_pressed = sf::Mouse::isButtonPressed(sf::Mouse::Left) &&
+                           sprite_.getGlobalBounds().contains(sf::Mouse::getPosition(window).x,
+                                                              sf::Mouse::getPosition(window).y) ||
+                       sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space);
+    if (now_pressed)
+    {
+        if (!was_pressed_)
+        {
+            was_pressed_ = true;
+            return was_pressed_;
+        }
+    }
+    else
+    {
+        if (was_pressed_)
+        {
+            was_pressed_ = false;
+        }
+    }
+    return false;
+}
+
+void Button::draw(sf::RenderTarget &target, sf::RenderStates states) const
+{
+    target.draw(sprite_, states);
+    target.draw(text_, states);
+}
+
+Button &Button::operator=(const Button &other_button)
+{
+    was_pressed_ = false;
+    sprite_ = other_button.sprite_;
+    texture_ = other_button.texture_;
+    text_ = other_button.text_;
+    font_ = other_button.font_;
+    return *this;
 }

@@ -8,7 +8,7 @@ class State
 {
 public:
     State(std::vector<Reel> &reels);
-    // return true if Execute is complite (to change state)
+    // return true if State is complite (to change state)
     virtual bool Update(float delta_time) = 0;
     virtual void Fast() = 0;
     virtual ~State() = default;
@@ -29,7 +29,7 @@ public:
 class StartRollState : public State
 {
 public:
-    StartRollState(std::vector<Reel> &reels, float acceleration);
+    StartRollState(std::vector<Reel> &reels);
     bool Update(float delta_time) override;
     void Fast() override;
 
@@ -51,15 +51,15 @@ private:
     bool is_fast;
 };
 
-class EndRollState : public State
+class StopRollState : public State
 {
 public:
-    EndRollState(std::vector<Reel> &reels, float acceleration);
+    StopRollState(std::vector<Reel> &reels);
     bool Update(float delta_time) override;
     void Fast() override;
 
 private:
-    const float acceleration_;
+    float acceleration_;
     bool is_fast;
 };
 
@@ -69,6 +69,7 @@ public:
     ShowResultState(std::vector<Reel> &reels, float timer);
     bool Update(float delta_time) override;
     void Fast() override {};
+    int CalculateResult() const;
 
 private:
     float curent_timer_;
