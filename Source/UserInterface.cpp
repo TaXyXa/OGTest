@@ -6,11 +6,12 @@
 
 UserInterface::UserInterface(std::vector<Reel> *reels)
     : reels_(reels),
-      window_(sf::VideoMode(800, 600), "Slot Machine"),
+      window_(sf::VideoMode(800, 600), "Slot Machine", sf::Style::Close | sf::Style::Titlebar | sf::Style::Resize),
       delta_time_(0.0f),
       sprite_size_(128),
-      reels_offset_(200.0f, 200.0f),
-      button_(128, 64, 400, 500)
+      reels_offset_(100.0f, 200.0f),
+      button_(128, 64, 400, 500),
+      reel_count_(reels_->size())
 
 {
     font_.loadFromFile("DarkGraffiti-Regular.ttf");
@@ -49,13 +50,13 @@ void UserInterface::Update()
             window_.close();
         }
     }
+    delta_time_ = clock.restart().asSeconds();
 
     window_.clear();
-    const int reel_count = reels_->size();
-
-    for (int i = 0; i < reel_count; i++)
+    float rotation;
+    for (int i = 0; i < reel_count_; i++)
     {
-        float rotation = (*reels_)[i].GetRotation();
+        rotation = (*reels_)[i].GetRotation();
         for (int j = rotation - 2; j <= rotation + 2; j++)
         {
             const int sprite_type = (*reels_)[i].GetSpriteByNumber(j);
@@ -67,8 +68,8 @@ void UserInterface::Update()
     }
     window_.draw(button_);
     window_.display();
-    delta_time_ = clock.restart().asSeconds();
-    std::cout << "FPS: " << (int)(1 / delta_time_) << std::endl;
+
+    // std::cout << "FPS: " << (int)(1 / delta_time_) << std::endl;
 }
 
 bool UserInterface::IsButtonPressed()

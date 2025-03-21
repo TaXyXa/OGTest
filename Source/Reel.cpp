@@ -46,3 +46,8 @@ float Reel::GetRotation() const
 {
     return rotation_;
 }
+
+void Reel::SetRotation(float new_rotation)
+{
+    rotation_ = new_rotation;
+}

@@ -11,6 +11,7 @@ public:
     float GetMaxRotationSpeed() const;
     void Rotate(float delta_time);
     int GetSpriteByNumber(int number) const;
+    void SetRotation(float new_rotation);
     float GetRotation() const;
 
 private:

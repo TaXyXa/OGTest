@@ -34,6 +34,7 @@ public:
 private:
     sf::RenderWindow window_;
     std::vector<Reel> *reels_;
+    const int reel_count_;
     std::vector<sf::Texture> textures_;
     std::vector<sf::Sprite> sprites_;
     sf::Vector2f reels_offset_;

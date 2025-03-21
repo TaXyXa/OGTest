@@ -57,9 +57,10 @@ public:
     StopRollState(std::vector<Reel> &reels);
     bool Update(float delta_time) override;
     void Fast() override;
+    void RandomAccelerations();
 
 private:
-    float acceleration_;
+    std::vector<float> accelerations_;
     bool is_fast;
 };
 
