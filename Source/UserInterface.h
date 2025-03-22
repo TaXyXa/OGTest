@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include <memory>
 
 #include "Reel.h"
 
@@ -8,8 +9,8 @@ class Button : public sf::Drawable
 {
 public:
     Button(int x_size, int y_size, int x_coordinates, int y_coordinates);
-    Button &operator=(const Button &other_button);
     bool IsButtonPressed(const sf::Window &window);
+    void SetText(const std::string &new_text);
 
 private:
     void draw(sf::RenderTarget &target, sf::RenderStates states) const override;
@@ -28,21 +29,22 @@ public:
     bool IsWindowOpen() const;
     void Update();
     bool IsButtonPressed();
+    void SetButtonText(const std::string &new_text);
     float GetDeltaTime() const;
     void SetResult(int result);
 
 private:
     sf::RenderWindow window_;
-    std::vector<Reel> *reels_;
-    const int reel_count_;
+    sf::Font font_;
     std::vector<sf::Texture> textures_;
     std::vector<sf::Sprite> sprites_;
-    sf::Texture automat_texture_;
-    sf::Sprite automat_sprite_;
+    std::unique_ptr<sf::Texture> automat_texture_;
+    std::unique_ptr<sf::Sprite> automat_sprite_;
+    std::unique_ptr<Button> button_;
+    std::vector<Reel> *reels_;
     sf::Vector2f reels_offset_;
-    sf::Font font_;
-    Button button_;
     sf::Clock clock;
+    const int reel_count_;
     float delta_time_;
     int sprite_size_;
     int result_;

@@ -73,6 +73,7 @@ public:
     int CalculateResult() const;
 
 private:
+    std::vector<int> value_table_;
     float curent_timer_;
     const float timer_duration_;
 };
