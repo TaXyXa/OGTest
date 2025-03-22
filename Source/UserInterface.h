@@ -37,6 +37,8 @@ private:
     const int reel_count_;
     std::vector<sf::Texture> textures_;
     std::vector<sf::Sprite> sprites_;
+    sf::Texture automat_texture_;
+    sf::Sprite automat_sprite_;
     sf::Vector2f reels_offset_;
     sf::Font font_;
     Button button_;

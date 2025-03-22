@@ -6,11 +6,11 @@
 #include "UserInterface.h"
 
 StateMachine::StateMachine()
-    : reels_({Reel({0, 1, 2, 3, 2, 1, 0}),
-              Reel({2, 3, 1, 0, 2, 3, 0}),
-              Reel({1, 0, 3, 2, 3, 1, 2}),
-              Reel({0, 3, 3, 1, 1, 2, 3}),
-              Reel({1, 0, 3, 2, 3, 1, 2})}),
+    : reels_({Reel({0, 1, 4, 6, 7, 5, 2, 3, 4, 3, 2, 6, 1, 7, 0}),
+              Reel({6, 2, 7, 3, 5, 4, 2, 1, 6, 0, 7, 2, 4, 3, 0}),
+              Reel({1, 5, 0, 4, 3, 6, 2, 7, 3, 5, 2, 1, 6, 7, 2}),
+              Reel({5, 0, 3, 7, 5, 3, 4, 4, 3, 5, 5, 1, 1, 2, 3}),
+              Reel({1, 4, 5, 6, 0, 7, 4, 3, 5, 2, 6, 3, 7, 1, 4})}),
       curent_state_(0),
       interface_(std::make_unique<UserInterface>(&reels_))
 {

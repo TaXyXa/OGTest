@@ -18,5 +18,5 @@ private:
     std::vector<int> sprites_;
     float speed_ = 0.0f;
     float rotation_ = 0.0f;
-    const float max_speed_ = 5.0f;
+    const float max_speed_ = 15.0f;
 };

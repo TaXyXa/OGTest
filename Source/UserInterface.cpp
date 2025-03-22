@@ -9,19 +9,19 @@ UserInterface::UserInterface(std::vector<Reel> *reels)
       window_(sf::VideoMode(800, 600), "Slot Machine", sf::Style::Close | sf::Style::Titlebar | sf::Style::Resize),
       delta_time_(0.0f),
       sprite_size_(128),
-      reels_offset_(100.0f, 200.0f),
-      button_(128, 64, 400, 500),
+      reels_offset_(80.0f, 206.0f),
+      button_(120, 60, 600, 520),
       reel_count_(reels_->size())
 
 {
     font_.loadFromFile("DarkGraffiti-Regular.ttf");
-
-    textures_.reserve(5);
-    sprites_.reserve(5);
-    for (int i = 0; i < 4; i++)
+    int number_of_symbols = 8;
+    textures_.reserve(number_of_symbols);
+    sprites_.reserve(number_of_symbols);
+    for (int i = 0; i < number_of_symbols; i++)
     {
         sf::Texture texture;
-        if (texture.loadFromFile("Sprites.png", sf::IntRect({0, i * sprite_size_ + 1}, {sprite_size_, sprite_size_})))
+        if (texture.loadFromFile("Sprites.png", sf::IntRect({0, i * sprite_size_}, {sprite_size_, sprite_size_})))
         {
             texture.setSmooth(true);
             sf::Texture &curent_texture = textures_.emplace_back(texture);
@@ -32,6 +32,11 @@ UserInterface::UserInterface(std::vector<Reel> *reels)
         {
             sprites_.emplace_back(sf::Sprite());
         }
+    }
+
+    if (automat_texture_.loadFromFile("Automat.png", sf::IntRect({0, 0}, {800, 600})))
+    {
+        automat_sprite_.setTexture(automat_texture_);
     }
 }
 
@@ -66,6 +71,7 @@ void UserInterface::Update()
             window_.draw(curent_sprite, sf::RenderStates().transform.translate({x_pos, y_pos}));
         }
     }
+    window_.draw(automat_sprite_);
     window_.draw(button_);
     window_.display();
 
@@ -97,11 +103,11 @@ Button::Button(int x_size, int y_size, int x_coordinates, int y_coordinates)
         sprite_ = sf::Sprite(texture_);
         std::cout << "Add button" << std::endl;
     }
-    text_.setString("Start");
+    text_.setString("Stop");
     text_.setFont(font_);
-    text_.setPosition(x_coordinates, y_coordinates);
-    text_.setFillColor(sf::Color::White);
-    text_.setCharacterSize(100);
+    text_.setPosition(x_coordinates + 5, y_coordinates - 5);
+    text_.setFillColor(sf::Color::Black);
+    text_.setCharacterSize(64);
     sprite_.setPosition(x_coordinates, y_coordinates);
 }
 
