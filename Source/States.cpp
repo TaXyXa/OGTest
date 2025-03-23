@@ -21,37 +21,6 @@ IdleState::IdleState(std::vector<Reel> &reels)
 {
 }
 
-StartRollState::StartRollState(std::vector<Reel> &reels)
-    : State(reels),
-      acceleration_(5.0f),
-      is_fast(false)
-{
-}
-
-RollState::RollState(std::vector<Reel> &reels, float timer_duration)
-    : State(reels),
-      curent_timer_(timer_duration),
-      timer_duration_(timer_duration),
-      is_fast(false)
-{
-}
-
-StopRollState::StopRollState(std::vector<Reel> &reels)
-    : State(reels),
-      is_fast(false),
-      accelerations_(reels.size())
-{
-    RandomAccelerations();
-}
-
-ShowResultState::ShowResultState(std::vector<Reel> &reels, float timer)
-    : State(reels),
-      value_table_({2, 2, 2, 2, 3, 5, 3, 5}),
-      curent_timer_(timer),
-      timer_duration_(timer)
-{
-}
-
 bool IdleState::Update(float delta_time)
 {
     for (Reel &reel : GetReels())
@@ -62,6 +31,13 @@ bool IdleState::Update(float delta_time)
     return false;
 }
 
+StartRollState::StartRollState(std::vector<Reel> &reels)
+    : State(reels),
+      acceleration_(5.0f),
+      is_fast(false)
+{
+}
+
 bool StartRollState::Update(float delta_time)
 {
     bool reels_overclocked = true;
@@ -70,7 +46,7 @@ bool StartRollState::Update(float delta_time)
         if (reel.GetRotationSpeed() < reel.GetMaxRotationSpeed())
         {
             reels_overclocked = false;
-            reel.SetRotationSpeed(reel.GetRotationSpeed() + delta_time * acceleration_ * (is_fast ? 5 : 1));
+            reel.SetRotationSpeed(reel.GetRotationSpeed() + delta_time * acceleration_ * (is_fast ? 10 : 1));
             reel.Rotate(delta_time);
         }
     }
@@ -80,6 +56,14 @@ bool StartRollState::Update(float delta_time)
         is_fast = false;
     }
     return reels_overclocked;
+}
+
+RollState::RollState(std::vector<Reel> &reels)
+    : State(reels),
+      curent_timer_(2.0f),
+      timer_duration_(2.0f),
+      is_fast(false)
+{
 }
 
 bool RollState::Update(float delta_time)
@@ -102,6 +86,14 @@ bool RollState::Update(float delta_time)
     return false;
 }
 
+StopRollState::StopRollState(std::vector<Reel> &reels)
+    : State(reels),
+      is_fast(false),
+      accelerations_(reels.size())
+{
+    RandomAccelerations();
+}
+
 bool StopRollState::Update(float delta_time)
 {
     bool reels_stoped = true;
@@ -110,16 +102,16 @@ bool StopRollState::Update(float delta_time)
         Reel &reel = GetReels()[i];
         float curent_speed = reel.GetRotationSpeed();
 
-        if (curent_speed > 0.50f)
+        if (curent_speed > 0.40f)
         {
-            reel.SetRotationSpeed(std::max(0.50f, curent_speed - delta_time * (is_fast ? 2 : 1) * accelerations_[i]));
+            reel.SetRotationSpeed(std::max(0.40f, curent_speed - delta_time * (is_fast ? 2 : 1) * accelerations_[i]));
             reel.Rotate(delta_time);
             reels_stoped = false;
         }
         else
         {
             float curent_rotation = reel.GetRotation();
-            if ((curent_rotation - (int)curent_rotation) > 0.25f)
+            if ((curent_rotation - (int)curent_rotation) > 0.2f)
             {
                 reel.Rotate(delta_time);
                 reels_stoped = false;
@@ -137,6 +129,14 @@ bool StopRollState::Update(float delta_time)
         RandomAccelerations();
     }
     return reels_stoped;
+}
+
+ShowResultState::ShowResultState(std::vector<Reel> &reels)
+    : State(reels),
+      value_table_({2, 2, 2, 5, 10}),
+      curent_timer_(3.0f),
+      timer_duration_(3.0f)
+{
 }
 
 bool ShowResultState::Update(float delta_time)
@@ -175,7 +175,7 @@ void StopRollState::RandomAccelerations()
     {
         std::random_device rd;
         std::mt19937 gen(rd());
-        std::uniform_int_distribution<> distrib(30, 70);
+        std::uniform_int_distribution<> distrib(20, 60);
 
         acceleration = distrib(gen) / 10.0f;
     }
@@ -211,4 +211,9 @@ int ShowResultState::CalculateResult() const
         result = 0;
     }
     return result;
+}
+
+void ShowResultState::ResetTimer()
+{
+    curent_timer_ = timer_duration_;
 }

@@ -5,6 +5,37 @@
 
 #include "Reel.h"
 
+class Button;
+
+class UserInterface
+{
+public:
+    UserInterface(std::vector<Reel> *reels);
+    bool IsWindowOpen() const;
+    float Update();
+    bool IsButtonPressed();
+    void SetButtonText(const std::string &new_text);
+    void SetResult(int result);
+
+private:
+    sf::RenderWindow window_;
+    sf::Font font_;
+    std::vector<sf::Texture> textures_;
+    std::vector<sf::Sprite> sprites_;
+    std::unique_ptr<sf::Texture> automat_texture_;
+    std::unique_ptr<sf::Sprite> automat_sprite_;
+    std::unique_ptr<Button> button_;
+    std::unique_ptr<sf::Texture> win_texture_;
+    std::unique_ptr<sf::Sprite> win_sprite_;
+    std::unique_ptr<sf::Text> win_text_;
+    std::vector<Reel> *reels_;
+    sf::Vector2f reels_offset_;
+    sf::Clock clock;
+    const int reel_count_;
+    int sprite_size_;
+    int result_;
+};
+
 class Button : public sf::Drawable
 {
 public:
@@ -20,32 +51,4 @@ private:
     sf::Texture texture_;
     sf::Text text_;
     sf::Font font_;
-};
-
-class UserInterface
-{
-public:
-    UserInterface(std::vector<Reel> *reels);
-    bool IsWindowOpen() const;
-    void Update();
-    bool IsButtonPressed();
-    void SetButtonText(const std::string &new_text);
-    float GetDeltaTime() const;
-    void SetResult(int result);
-
-private:
-    sf::RenderWindow window_;
-    sf::Font font_;
-    std::vector<sf::Texture> textures_;
-    std::vector<sf::Sprite> sprites_;
-    std::unique_ptr<sf::Texture> automat_texture_;
-    std::unique_ptr<sf::Sprite> automat_sprite_;
-    std::unique_ptr<Button> button_;
-    std::vector<Reel> *reels_;
-    sf::Vector2f reels_offset_;
-    sf::Clock clock;
-    const int reel_count_;
-    float delta_time_;
-    int sprite_size_;
-    int result_;
 };

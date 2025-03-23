@@ -1,28 +1,26 @@
 #include <SFML/Graphics.hpp>
-#include <iostream>
 #include <string>
 
 #include "UserInterface.h"
 
 UserInterface::UserInterface(std::vector<Reel> *reels)
     : window_(sf::VideoMode(800, 600), "Slot Machine", sf::Style::Close | sf::Style::Titlebar | sf::Style::Resize),
-      button_(std::make_unique<Button>(120, 60, 600, 520)),
+      button_(std::make_unique<Button>(200, 70, 400, 545)),
       reels_(reels),
       reels_offset_(80.0f, 206.0f),
       reel_count_(reels->size()),
-      delta_time_(0.0f),
       sprite_size_(128)
 {
-    window_.setFramerateLimit(60);
     font_.loadFromFile("DarkGraffiti-Regular.ttf");
 
-    int number_of_symbols = 8;
+    int number_of_symbols = 5;
     textures_.reserve(number_of_symbols);
     sprites_.reserve(number_of_symbols);
+
     sf::Texture texture;
     for (int i = 0; i < number_of_symbols; i++)
     {
-        if (texture.loadFromFile("Sprites.png", sf::IntRect({0, i * sprite_size_}, {sprite_size_, sprite_size_})))
+        if (texture.loadFromFile("Symbols.png", sf::IntRect({0, i * sprite_size_}, {sprite_size_, sprite_size_})))
         {
             texture.setSmooth(true);
             sf::Texture &curent_texture = textures_.emplace_back(texture);
@@ -34,12 +32,27 @@ UserInterface::UserInterface(std::vector<Reel> *reels)
         }
     }
 
-    if (texture.loadFromFile("Automat.png", sf::IntRect({0, 0}, {800, 600})))
+    automat_texture_ = std::make_unique<sf::Texture>();
+    if (automat_texture_->loadFromFile("Automat.png", sf::IntRect({0, 0}, {800, 600})))
     {
-        automat_texture_ = std::make_unique<sf::Texture>(texture);
         automat_texture_->setSmooth(true);
         automat_sprite_ = std::make_unique<sf::Sprite>(*automat_texture_);
     }
+
+    win_texture_ = std::make_unique<sf::Texture>();
+    if (win_texture_->loadFromFile("Win.png", sf::IntRect({0, 0}, {640, 382})))
+    {
+        win_texture_->setSmooth(true);
+        win_sprite_ = std::make_unique<sf::Sprite>(*win_texture_);
+        sf::FloatRect win_bounds = win_sprite_->getLocalBounds();
+        win_sprite_->setOrigin(win_bounds.width / 2, win_bounds.height / 2);
+        win_sprite_->setPosition({400, 270});
+    }
+    win_text_ = std::make_unique<sf::Text>();
+    win_text_->setFont(font_);
+    win_text_->setFillColor(sf::Color::Black);
+    win_text_->setCharacterSize(128);
+    win_text_->setPosition({400, 340});
 }
 
 bool UserInterface::IsWindowOpen() const
@@ -47,7 +60,7 @@ bool UserInterface::IsWindowOpen() const
     return window_.isOpen();
 }
 
-void UserInterface::Update()
+float UserInterface::Update()
 {
     sf::Event event;
     while (window_.pollEvent(event))
@@ -58,7 +71,6 @@ void UserInterface::Update()
         }
     }
 
-    delta_time_ = clock.restart().asSeconds();
     window_.clear();
 
     float rotation;
@@ -74,9 +86,17 @@ void UserInterface::Update()
             window_.draw(curent_sprite, sf::RenderStates().transform.translate({x_pos, y_pos}));
         }
     }
+
     window_.draw(*automat_sprite_);
     window_.draw(*button_);
+    if (result_ > 0)
+    {
+        window_.draw(*win_sprite_);
+        window_.draw(*win_text_);
+    }
+
     window_.display();
+    return clock.restart().asSeconds();
 }
 
 bool UserInterface::IsButtonPressed()
@@ -89,15 +109,13 @@ void UserInterface::SetButtonText(const std::string &new_text)
     button_->SetText(new_text);
 }
 
-float UserInterface::GetDeltaTime() const
-{
-    return delta_time_;
-}
-
 void UserInterface::SetResult(int result)
 {
     result_ = result;
-    std::cout << result << std::endl;
+    win_text_->setString(std::to_string(result_));
+
+    sf::FloatRect text_bound = win_text_->getLocalBounds();
+    win_text_->setOrigin(text_bound.width / 2, text_bound.height);
 }
 
 Button::Button(int x_size, int y_size, int x_coordinates, int y_coordinates)
@@ -108,13 +126,18 @@ Button::Button(int x_size, int y_size, int x_coordinates, int y_coordinates)
     {
         texture_.setSmooth(true);
         sprite_ = sf::Sprite(texture_);
+        sf::FloatRect bound = sprite_.getLocalBounds();
+        sprite_.setOrigin(bound.width / 2, bound.height / 2);
+        sprite_.setPosition(x_coordinates, y_coordinates);
     }
-    text_.setString("Start");
+
+    text_.setString("START");
     text_.setFont(font_);
-    text_.setPosition(x_coordinates + 5, y_coordinates - 5);
     text_.setFillColor(sf::Color::Black);
     text_.setCharacterSize(64);
-    sprite_.setPosition(x_coordinates, y_coordinates);
+    sf::FloatRect bound = text_.getLocalBounds();
+    text_.setOrigin(bound.width / 2, bound.height / 2 + 10);
+    text_.setPosition(x_coordinates, y_coordinates);
 }
 
 bool Button::IsButtonPressed(const sf::Window &window)
@@ -151,4 +174,6 @@ void Button::draw(sf::RenderTarget &target, sf::RenderStates states) const
 void Button::SetText(const std::string &new_text)
 {
     text_.setString(new_text);
+    sf::FloatRect bound = text_.getLocalBounds();
+    text_.setOrigin(bound.width / 2, bound.height / 2 + 10);
 }

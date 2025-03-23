@@ -21,5 +21,5 @@ private:
     std::vector<Reel> reels_;
     std::unique_ptr<UserInterface> interface_;
     int curent_state_;
-    bool next_state_ = false;
+    bool next_state_;
 };

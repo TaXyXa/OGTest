@@ -8,7 +8,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # Find SFML
-find_package(SFML REQUIRED COMPONENTS graphics window system audio)
+find_package(SFML REQUIRED COMPONENTS graphics window system)
 
 # Source files
 set(SOURCE
@@ -23,4 +23,4 @@ set(SOURCE
 add_executable(SlotMachine ${SOURCE})
 
 # Link SFML libraries
-target_link_libraries(SlotMachine PRIVATE sfml-graphics sfml-window sfml-system sfml-audio)
+target_link_libraries(SlotMachine PRIVATE sfml-graphics sfml-window sfml-system)
