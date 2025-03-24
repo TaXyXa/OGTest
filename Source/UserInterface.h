@@ -10,15 +10,18 @@ class Button;
 class UserInterface
 {
 public:
-    UserInterface(std::vector<Reel> *reels);
+    UserInterface(const std::vector<Reel> *reels);
     bool IsWindowOpen() const;
+    // return frame time
     float Update();
+    // return once true if Start button or Space was pressed
     bool IsButtonPressed();
     void SetButtonText(const std::string &new_text);
+    // resul of roll. Zero will not show
     void SetResult(int result);
 
 private:
-    sf::RenderWindow window_;
+    std::unique_ptr<sf::RenderWindow> window_;
     sf::Font font_;
     std::vector<sf::Texture> textures_;
     std::vector<sf::Sprite> sprites_;
@@ -28,11 +31,11 @@ private:
     std::unique_ptr<sf::Texture> win_texture_;
     std::unique_ptr<sf::Sprite> win_sprite_;
     std::unique_ptr<sf::Text> win_text_;
-    std::vector<Reel> *reels_;
-    sf::Vector2f reels_offset_;
     sf::Clock clock;
+    const std::vector<Reel> *reels_;
+    const sf::Vector2f reels_offset_;
     const int reel_count_;
-    int sprite_size_;
+    const int sprite_size_;
     int result_;
 };
 
@@ -47,8 +50,8 @@ private:
     void draw(sf::RenderTarget &target, sf::RenderStates states) const override;
 
     bool was_pressed_;
-    sf::Sprite sprite_;
-    sf::Texture texture_;
-    sf::Text text_;
     sf::Font font_;
+    std::unique_ptr<sf::Text> text_;
+    std::unique_ptr<sf::Texture> texture_;
+    std::unique_ptr<sf::Sprite> sprite_;
 };

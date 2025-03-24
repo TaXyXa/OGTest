@@ -1,7 +1,7 @@
 #include "Reel.h"
 
-Reel::Reel(std::initializer_list<int> sprites)
-    : sprites_(sprites)
+Reel::Reel(std::initializer_list<int> symbols_types)
+    : symbols_(symbols_types)
 {
 }
 
@@ -23,9 +23,9 @@ float Reel::GetMaxRotationSpeed() const
 void Reel::Rotate(float delta_time)
 {
     rotation_ += speed_ * delta_time;
-    if (rotation_ > sprites_.size())
+    if (rotation_ > symbols_.size())
     {
-        rotation_ -= sprites_.size();
+        rotation_ -= symbols_.size();
     }
 }
 
@@ -33,13 +33,13 @@ int Reel::GetSpriteByNumber(int number) const
 {
     if (number < 0)
     {
-        return GetSpriteByNumber(number + sprites_.size());
+        return GetSpriteByNumber(number + symbols_.size());
     }
-    if (number < sprites_.size())
+    if (number < symbols_.size())
     {
-        return sprites_[number];
+        return symbols_[number];
     }
-    return sprites_[number % sprites_.size()];
+    return symbols_[number % symbols_.size()];
 }
 
 float Reel::GetRotation() const

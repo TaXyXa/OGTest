@@ -38,6 +38,6 @@
 # Build-артефакты
 build/
 # SFML
-SFML-3.0.0/
+SFML-2.6.0/
 # CMAKE
 CMakeFiles/

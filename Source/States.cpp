@@ -1,4 +1,3 @@
-#include <iostream>
 #include <vector>
 #include <cmath>
 #include <random>
@@ -6,17 +5,17 @@
 #include "Reel.h"
 #include "States.h"
 
-State::State(std::vector<Reel> &reels)
+State::State(std::vector<Reel> *reels)
     : reels_(reels)
 {
 }
 
 std::vector<Reel> &State::GetReels() const
 {
-    return reels_;
+    return *reels_;
 }
 
-IdleState::IdleState(std::vector<Reel> &reels)
+IdleState::IdleState(std::vector<Reel> *reels)
     : State(reels)
 {
 }
@@ -31,7 +30,7 @@ bool IdleState::Update(float delta_time)
     return false;
 }
 
-StartRollState::StartRollState(std::vector<Reel> &reels)
+StartRollState::StartRollState(std::vector<Reel> *reels)
     : State(reels),
       acceleration_(5.0f),
       is_fast(false)
@@ -58,7 +57,7 @@ bool StartRollState::Update(float delta_time)
     return reels_overclocked;
 }
 
-RollState::RollState(std::vector<Reel> &reels)
+RollState::RollState(std::vector<Reel> *reels)
     : State(reels),
       curent_timer_(2.0f),
       timer_duration_(2.0f),
@@ -86,10 +85,10 @@ bool RollState::Update(float delta_time)
     return false;
 }
 
-StopRollState::StopRollState(std::vector<Reel> &reels)
+StopRollState::StopRollState(std::vector<Reel> *reels)
     : State(reels),
       is_fast(false),
-      accelerations_(reels.size())
+      accelerations_(reels->size())
 {
     RandomAccelerations();
 }
@@ -131,7 +130,7 @@ bool StopRollState::Update(float delta_time)
     return reels_stoped;
 }
 
-ShowResultState::ShowResultState(std::vector<Reel> &reels)
+ShowResultState::ShowResultState(std::vector<Reel> *reels)
     : State(reels),
       value_table_({2, 2, 2, 5, 10}),
       curent_timer_(3.0f),
